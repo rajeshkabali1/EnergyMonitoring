@@ -1,22 +1,33 @@
 const http = require('http');
-var fs = require('fs');
-var internetAvailable = require("internet-available");
+const fs = require('fs');
+const internetAvailable = require('internet-available');
+let mservice = require('./service.js');
 
 const hostname = '127.0.0.1';
 const port = 3000;
-var file_dir = 'D:\\EnergyMonitoring\\Data';
+const file_dir = 'D:\\EnergyMonitoring\\Data';
 
 
-const server = http.createServer((req, res) => {
+ const server = http.createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
   res.end('Hello World!\n');
+
 });
 
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
+  var msg = mservice.insertData('abc', new Date());
+  console.log('msg, ',msg);
+  msg = mservice.insertData('def', new Date());
+  console.log('msg, ',msg);
+  msg = mservice.insertData('ghi', new Date());
+  console.log('msg, ',msg);
 });
 
+
+
+/**
 function readFiles(dirname, onFileContent, onError) {
   fs.readdir(dirname, function(err, filenames) {
     if (err) {
@@ -72,4 +83,5 @@ function writeToFile(){
   console.log("writeToFile");
 };
 
+*/
 

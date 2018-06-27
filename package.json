@@ -1,0 +1,26 @@
+{
+  "name": "Energy Monitoring",
+  "version": "1.0.0",
+  "description": "Energy Monitoring Project",
+  "main": "app.js",
+  "dependencies": {
+    "internet-available": "^1.0.0",
+    "mssql": "^4.1.0",
+    "mysql": "^2.15.0",
+    "node-mssql": "0.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node -v"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/rajeshkabali1/EnergyMonitoring.git"
+  },
+  "author": "Rajesh Kabali",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rajeshkabali1/EnergyMonitoring/issues"
+  },
+  "homepage": "https://github.com/rajeshkabali1/EnergyMonitoring#readme"
+}
