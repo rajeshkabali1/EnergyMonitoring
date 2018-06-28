@@ -7,7 +7,8 @@
     "internet-available": "^1.0.0",
     "mssql": "^4.1.0",
     "mysql": "^2.15.0",
-    "node-mssql": "0.0.1"
+    "node-mssql": "0.0.1",
+    "promise": "^8.0.1"
   },
   "devDependencies": {},
   "scripts": {
