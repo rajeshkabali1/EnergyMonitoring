@@ -1,10 +1,12 @@
 const internetAvailable = require('internet-available');
+var uniqid = require('uniqid');
 var mservice = require('./service.js');
 const fs = require('fs');
 
 const file_dir = 'D:\\EnergyMonitoring\\Data';
 
 var fileProcessing = module.exports = {
+
     readFiles: function (dirname, onFileContent, onError) {
         fs.readdir(dirname, function (err, filenames) {
             if (err) {
@@ -23,6 +25,7 @@ var fileProcessing = module.exports = {
             });
         });
     },
+
     processFiles: function (fileName, data) {
         console.log('Processing file ', fileName);
         internetAvailable({
@@ -35,6 +38,7 @@ var fileProcessing = module.exports = {
             console.log("No internet");
         });
     },
+
     moveDataToCloudFromFile: function (fileName, data) {
         console.log("moveDataToCloudFromFile");
         mservice.insertData(data).then(function (response) {
@@ -49,12 +53,14 @@ var fileProcessing = module.exports = {
             console.log('moveDataToCloud err, ', err);
         })
     },
+
     deleteFile: function (fileName) {
         fs.unlink(file_dir + '\\' + fileName, function (err) {
             if (err) return console.log(err);
             console.log('file deleted successfully');
         });
     },
+
     checkDir: function () {
         console.log('Checking for unprocessed data files in the folder ' + file_dir);
         fileProcessing.readFiles(file_dir,
@@ -66,16 +72,19 @@ var fileProcessing = module.exports = {
                 console.log('on error' + err);
             });
     },
+
     writeToFile: function (dataToAppend) {
         console.log("writeToFile");
-        fs.appendFile(file_dir + '\\data.txt', ("\r\n" + dataToAppend), function (err) {
-            if (err) throw err;
-            console.log('Saved!');
+        var fileName = file_dir + '\\' + uniqid('data') + '.txt';
+        fs.writeFile(fileName, dataToAppend, function (err) {
+            if (err) console.log("writeToFile, ", err.message);
+            console.log('Saved!' + fileName);
         });
-    }
 
+
+    }
 };
 
-setInterval(function(){
+setInterval(function () {
     fileProcessing.checkDir();
 }, 2000);

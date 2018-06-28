@@ -12,7 +12,10 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
-  serialReading.readFromSocket();
+  serialReading.readFromSocket("ndmeb1");
+  serialReading.readFromSocket("ndmeb2");
+  serialReading.readFromSocket("ndmeb3");
+
 });
 
 

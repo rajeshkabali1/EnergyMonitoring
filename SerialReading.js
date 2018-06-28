@@ -4,14 +4,14 @@ var mservice = require('./service.js');
 
 var serialReading = module.exports = {
 
-    readFromSocket: function () {
-        var test_data = "test data";
+    readFromSocket: function (test_data) {
+        // var test_data = "test data";
         internetAvailable({
             timeout: 4000,
             retries: 10,
         }).then(function () {
             console.log("Internet available");
-            moveDataToCloud(test_data);
+            serialReading.moveDataToCloud(test_data);
         }).catch(function () {
             console.log("No internet");
             fileProcessing.writeToFile(test_data);
