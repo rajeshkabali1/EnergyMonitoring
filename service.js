@@ -1,8 +1,10 @@
 const mysql = require('mysql');
-let config = require('./config.js');
+var logger = require('winston');   
 var Promise = require('promise');
+let config = require('./config');
 
-var pool = mysql.createPool(config);
+
+var pool = mysql.createPool(config.database);
 
 let service = {
     insertData: function (data) {
@@ -12,7 +14,7 @@ let service = {
                 connection.query('CALL Insert_Raw_Data(?,?)', [data, new Date()], (error, results, fields) => {
                     connection.release();
                     if (error) reject(error);
-                    console.log('insertData, ',results);
+                    logger.info('insertData, ',results);
                     resolve(results);
                 });
             });

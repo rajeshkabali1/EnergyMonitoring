@@ -1,15 +1,16 @@
 {
-  "name": "Energy Monitoring",
+  "name": "energymonitoring",
   "version": "1.0.0",
   "description": "Energy Monitoring Project",
   "main": "app.js",
   "dependencies": {
     "internet-available": "^1.0.0",
-    "mssql": "^4.1.0",
+    "logger-winston": "0.0.11",
     "mysql": "^2.15.0",
-    "node-mssql": "0.0.1",
     "promise": "^8.0.1",
-    "uniqid": "^5.0.3"
+    "serialport": "^6.2.0",
+    "uniqid": "^5.0.3",
+    "winston": "^3.0.0"
   },
   "devDependencies": {},
   "scripts": {

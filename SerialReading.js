@@ -1,11 +1,26 @@
 const internetAvailable = require('internet-available');
-var fileProcessing = require('./fileProcessing.js');
-var mservice = require('./service.js');
+const SerialPort = require('serialport');
+var fileProcessing = require('./fileProcessing');
+var mservice = require('./service');
+
+
 
 var serialReading = module.exports = {
 
+    connectSerialPort: function () {
+        const port = new SerialPort('/dev/ttyACM0', () => {
+            console.log('Port Opened');
+        });
+        const parsers = SerialPort.parsers;
+        const parser = new parsers.Readline({
+            delimiter: '\n'        
+        });
+        
+        port.pipe(parser);
+        parser.on('data', serialReading.readFromSocket);
+    },
+
     readFromSocket: function (test_data) {
-        // var test_data = "test data";
         internetAvailable({
             timeout: 4000,
             retries: 10,

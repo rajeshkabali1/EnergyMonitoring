@@ -1,8 +1,11 @@
 const http = require('http');
-var serialReading = require('./serialReading.js');
+var serialReading = require('./serialReading');
+let logger = require('./logger');
 
 const hostname = '127.0.0.1';
 const port = 3000;
+
+
 
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
@@ -11,12 +14,15 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-  serialReading.readFromSocket("ndmeb1");
-  serialReading.readFromSocket("ndmeb2");
-  serialReading.readFromSocket("ndmeb3");
+  logger.info(`Server running at http://${hostname}:${port}/`);
+  init();
 
 });
+
+var init = function(){
+  // serialReading.connectSerialPort();
+  serialReading.readFromSocket('evwbwb');
+}
 
 
 

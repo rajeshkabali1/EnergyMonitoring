@@ -1,7 +1,9 @@
+const fs = require('fs');
 const internetAvailable = require('internet-available');
 var uniqid = require('uniqid');
-var mservice = require('./service.js');
-const fs = require('fs');
+var mservice = require('./service');
+var logger = require('winston');   
+
 
 const file_dir = 'D:\\EnergyMonitoring\\Data';
 
@@ -9,17 +11,11 @@ var fileProcessing = module.exports = {
 
     readFiles: function (dirname, onFileContent, onError) {
         fs.readdir(dirname, function (err, filenames) {
-            if (err) {
-                onError(err);
-                return;
-            }
+            if (err) return onError(err);
             filenames.forEach(function (filename) {
-                console.log('File Name: ', filename);
+                logger.info('File Name: ', filename);
                 fs.readFile(dirname + '\\' + filename, 'utf-8', function (err, content) {
-                    if (err) {
-                        onError(err);
-                        return;
-                    }
+                    if (err) return onError(err);
                     onFileContent(filename, content);
                 });
             });
@@ -27,63 +23,65 @@ var fileProcessing = module.exports = {
     },
 
     processFiles: function (fileName, data) {
-        console.log('Processing file ', fileName);
+        logger.info('Processing file ', fileName);
         internetAvailable({
             timeout: 4000,
             retries: 10,
         }).then(function () {
-            console.log("Internet available");
             fileProcessing.moveDataToCloudFromFile(fileName, data);
-        }).catch(function () {
-            console.log("No internet");
+        }).catch(function (err) {
+            onError(err);
         });
     },
 
     moveDataToCloudFromFile: function (fileName, data) {
-        console.log("moveDataToCloudFromFile");
+        logger.info("moveDataToCloudFromFile");
         mservice.insertData(data).then(function (response) {
-            console.log('moveDataToCloud response, ', response);
+            logger.info('moveDataToCloud response, ', response);
             if (response[0][0].return_value == 1) {
-                console.log('File content inserted Successfully!');
+                logger.info('File content inserted Successfully!');
                 fileProcessing.deleteFile(fileName);
             } else {
                 //fileProcessing.writeToFile(test_data);//error file?
             }
         }).catch(function (err) {
-            console.log('moveDataToCloud err, ', err);
+            onError(err);
         })
     },
 
     deleteFile: function (fileName) {
         fs.unlink(file_dir + '\\' + fileName, function (err) {
-            if (err) return console.log(err);
-            console.log('file deleted successfully');
+            if (err) return onError(err);
+            logger.info('file deleted successfully');
         });
     },
 
     checkDir: function () {
-        console.log('Checking for unprocessed data files in the folder ' + file_dir);
+        logger.info('Checking for unprocessed data files in the folder ' + file_dir);
         fileProcessing.readFiles(file_dir,
             (name, data) => {
-                console.log('on file content');
+                logger.info('on file content');
                 fileProcessing.processFiles(name, data);
             },
             (err) => {
-                console.log('on error' + err);
-            });
+                onError(err);
+            }
+        );
     },
 
     writeToFile: function (dataToAppend) {
-        console.log("writeToFile");
+        logger.info("writeToFile");
         var fileName = file_dir + '\\' + uniqid('data') + '.txt';
         fs.writeFile(fileName, dataToAppend, function (err) {
-            if (err) console.log("writeToFile, ", err.message);
-            console.log('Saved!' + fileName);
+            if (err) onError(err);
+            logger.info('Saved!' + fileName);
         });
-
-
     }
 };
+
+var onError = function (err) {
+    logger.info(err.message);
+}
 
 setInterval(function () {
     fileProcessing.checkDir();
